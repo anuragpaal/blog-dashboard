@@ -33,7 +33,7 @@ export default function Posts() {
   const totalPages = Math.ceil(filtered.length / POSTS_PER_PAGE);
 
   return (
-    <div className="p-10">
+    <div className="max-w-6xl mx-auto px-6 py-10">
       <h1 className="text-3xl font-bold mb-4">Posts</h1>
 
       <input
@@ -64,9 +64,9 @@ export default function Posts() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {paginated.map((post) => (
             <Link key={post.id} href={`/posts/${post.id}`}>
-              <div className="border p-5 rounded shadow hover:shadow-lg cursor-pointer transition">
-                <h2 className="font-bold">{post.title}</h2>
-                <p>{post.body.slice(0, 80)}...</p>
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                <h2 className="font-semibold text-lg mb-3 line-clamp-2">{post.title}</h2>
+                <p className="text-gray-600 text-sm line-clamp-3">{post.body}</p>
               </div>
             </Link>
           ))}
@@ -86,7 +86,7 @@ export default function Posts() {
           <button
             key={i}
             onClick={() => setPage(i + 1)}
-            className={`px-4 py-2 border rounded ${
+            className={`px-4 py-2 border rounded cursor-pointer ${
               page === i + 1 ? "bg-black text-white" : ""
             }`}
           >
