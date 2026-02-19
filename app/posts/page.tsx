@@ -8,6 +8,7 @@ export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const POSTS_PER_PAGE = 6;
 
@@ -16,6 +17,7 @@ export default function Posts() {
       const res = await fetch("https://jsonplaceholder.typicode.com/posts");
       const data = await res.json();
       setPosts(data);
+      setLoading(false);
     }
 
     fetchPosts();
@@ -45,20 +47,38 @@ export default function Posts() {
         }}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {paginated.length === 0 ? (
-          <p className="text-2xl font-bold">No data found </p>
-        ) : (
-          paginated.map((post) => (
+      {/* Loading Skeleton */}
+      {loading && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="border p-5 rounded shadow animate-pulse">
+              <div className="h-4 bg-gray-300 mb-4 rounded"></div>
+              <div className="h-3 bg-gray-200 rounded"></div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Real Data */}
+      {!loading && paginated.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {paginated.map((post) => (
             <Link key={post.id} href={`/posts/${post.id}`}>
-              <div className="border p-5 rounded shadow hover:shadow-lg cursor-pointer">
+              <div className="border p-5 rounded shadow hover:shadow-lg cursor-pointer transition">
                 <h2 className="font-bold">{post.title}</h2>
                 <p>{post.body.slice(0, 80)}...</p>
               </div>
             </Link>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && paginated.length === 0 && (
+        <p className="text-center text-gray-500 mt-10 text-lg">
+          No posts found
+        </p>
+      )}
 
       {/* Pagination */}
       <div className="flex gap-2 mt-8">
